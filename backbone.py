@@ -3,8 +3,8 @@ import numpy as np
 from scipy import integrate
 
 
-def edge_significance_scores(G):
-    ''' Compute significance scores for weighted edges in G
+def disparity_filter(G):
+    ''' Compute significance scores (alpha) for weighted edges in G as defined in Serrano et al. 2009
         Args:
             G: weighted NetworkX graph
         Return:
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     for u, v in G.edges():
         G[u][v]['weight'] = np.random.randint(1,100)
     alpha = 0.05
-    G = edge_significance_scores(G)
+    G = disparity_filter(G)
     G2 = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['alpha'] < alpha])
     print 'alpha = %s' % alpha
     print 'original: nodes = %s, edges = %s' % (G.number_of_nodes(), G.number_of_edges())
