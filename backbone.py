@@ -3,16 +3,14 @@ import numpy as np
 from scipy import integrate
 
 
-def backbone(G, alpha):
-    ''' Extract backbone of weighted networks
+def edge_significance_scores(G):
+    ''' Compute significance scores for weighted edges in G
         Args:
-            G: NetworkX graph
-            alpha: Significance level alpha, e.g., alpha in [0.01, 0.5]
+            G: weighted NetworkX graph
         Return:
-            NetworkX graph of backbone network
+            weighted graph with a significance score (alpha) assigned to each edge
     '''
-
-    backbone_G = nx.Graph()
+    B = nx.Graph()
     for u in G:
         k = len(G[u])
         if k > 1:
@@ -21,17 +19,18 @@ def backbone(G, alpha):
                 w = G[u][v]['weight']
                 p_ij = float(w)/sum_w
                 alpha_ij = 1 - (k-1) * integrate.quad(lambda x: (1-x)**(k-2), 0, p_ij)[0]
-                if alpha_ij < alpha:
-                    backbone_G.add_edge(u, v, weight = w)
-    return backbone_G
+                B.add_edge(u, v, weight=w, alpha=float('%.4f' % alpha_ij))
+    return B
                 
             
 if __name__ == '__main__':
-    g = nx.barabasi_albert_graph(100, 5)
-    for i, j in g.edges():
-        g[i][j]['weight'] = np.random.randint(1,100)
-    alpha = 0.1
-    bbg = backbone(g, alpha)
+    G = nx.barabasi_albert_graph(1000, 5)
+    for u, v in G.edges():
+        G[u][v]['weight'] = np.random.randint(1,100)
+    alpha = 0.05
+    G = edge_significance_scores(G)
+    G2 = nx.Graph([(u, v, d) for u, v, d in G.edges(data=True) if d['alpha'] < alpha])
     print 'alpha = %s' % alpha
-    print 'original: nodes = %s, edges = %s' % (g.number_of_nodes(), g.number_of_edges())
-    print 'backbone: nodes = %s, edges = %s' % (bbg.number_of_nodes(), bbg.number_of_edges())
+    print 'original: nodes = %s, edges = %s' % (G.number_of_nodes(), G.number_of_edges())
+    print 'backbone: nodes = %s, edges = %s' % (G2.number_of_nodes(), G2.number_of_edges())
+    print G2.edges(data=True)
