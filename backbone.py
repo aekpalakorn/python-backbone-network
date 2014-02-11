@@ -1,3 +1,7 @@
+'''
+This module implements the disparity filter to compute a significance score of edge weights in networks
+'''
+
 import networkx as nx
 import numpy as np
 from scipy import integrate
@@ -5,10 +9,12 @@ from scipy import integrate
 
 def disparity_filter(G):
     ''' Compute significance scores (alpha) for weighted edges in G as defined in Serrano et al. 2009
-        Args:
-            G: weighted NetworkX graph
-        Return:
-            weighted graph with a significance score (alpha) assigned to each edge
+        Args
+            G: Weighted NetworkX graph
+        Returns
+            Weighted graph with a significance score (alpha) assigned to each edge
+        References
+            M. A. Serrano et al. (2009) Extracting the Multiscale backbone of complex weighted networks. PNAS, 106:16, pp. 6483-6488.
     '''
     B = nx.Graph()
     for u in G:
