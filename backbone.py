@@ -32,7 +32,7 @@ def disparity_filter(G, weight='weight'):
             
             k_in = G.in_degree(u)
             if k_in > 1:
-                sum_w_in = sum(G[v][u]['weight'] for v in G.predecessors(u))
+                sum_w_in = sum(G[v][u][weight] for v in G.predecessors(u))
                 for v in G.predecessors(u):
                     w = G[v][u][weight]
                     p_ij_in = float(w)/sum_w_in
