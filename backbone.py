@@ -23,19 +23,19 @@ def disparity_filter(G, weight='weight'):
             
             k_out = G.out_degree(u)
             if k_out > 1:
-                sum_w_out = sum(G[u][v][weight] for v in G.successors(u))
+                sum_w_out = sum(np.absolute(G[u][v][weight]) for v in G.successors(u))
                 for v in G.successors(u):
                     w = G[u][v][weight]
-                    p_ij_out = float(w)/sum_w_out
+                    p_ij_out = float(np.absolute(w))/sum_w_out
                     alpha_ij_out = 1 - (k_out-1) * integrate.quad(lambda x: (1-x)**(k_out-2), 0, p_ij_out)[0]
                     N.add_edge(u, v, weight = w, alpha_out=float('%.4f' % alpha_ij_out))
             
             k_in = G.in_degree(u)
             if k_in > 1:
-                sum_w_in = sum(G[v][u][weight] for v in G.predecessors(u))
+                sum_w_in = sum(np.absolute(G[v][u][weight]) for v in G.predecessors(u))
                 for v in G.predecessors(u):
                     w = G[v][u][weight]
-                    p_ij_in = float(w)/sum_w_in
+                    p_ij_in = float(np.absolute(w))/sum_w_in
                     alpha_ij_in = 1 - (k_in-1) * integrate.quad(lambda x: (1-x)**(k_in-2), 0, p_ij_in)[0]
                     N.add_edge(v, u, weight = w, alpha_in=float('%.4f' % alpha_ij_in))
         return N
@@ -45,10 +45,10 @@ def disparity_filter(G, weight='weight'):
         for u in G:
             k = len(G[u])
             if k > 1:
-                sum_w = sum(G[u][v][weight] for v in G[u])
+                sum_w = sum(np.absolute(G[u][v][weight]) for v in G[u])
                 for v in G[u]:
                     w = G[u][v][weight]
-                    p_ij = float(w)/sum_w
+                    p_ij = float(np.absolute(w))/sum_w
                     alpha_ij = 1 - (k-1) * integrate.quad(lambda x: (1-x)**(k-2), 0, p_ij)[0]
                     B.add_edge(u, v, weight = w, alpha=float('%.4f' % alpha_ij))
         return B
