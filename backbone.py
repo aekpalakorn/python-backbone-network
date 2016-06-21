@@ -40,7 +40,7 @@ def disparity_filter(G, weight='weight'):
                 #there is no need to do the same for the k_in, since the link is built already from the tail
             
             if k_in > 1:
-                sum_w_in = sum(np.absolute(G[v][u]['weight']) for v in G.predecessors(u))
+                sum_w_in = sum(np.absolute(G[v][u][weight]) for v in G.predecessors(u))
                 for v in G.predecessors(u):
                     w = G[v][u][weight]
                     p_ij_in = float(np.absolute(w))/sum_w_in
