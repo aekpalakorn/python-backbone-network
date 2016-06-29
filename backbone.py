@@ -120,7 +120,7 @@ def disparity_filter_alpha_cut(G,weight='weight',alpha_t=0.4, cut_mode='or'):
             try:
                 alpha = w['alpha']
             except KeyError: #there is no alpha, so we assign 1. It will never pass the cut
-                alpha == 1
+                alpha = 1
                 
             if alpha<alpha_t:
                 B.add_edge(u,v, weight=w[weight])
